@@ -1,0 +1,49 @@
+TARGET = SDL2_image
+OBJS = \
+    src/IMG.o \
+    src/IMG_WIC.o \
+    src/IMG_avif.o \
+    src/IMG_bmp.o \
+    src/IMG_gif.o \
+    src/IMG_jpg.o \
+    src/IMG_jxl.o \
+    src/IMG_lbm.o \
+    src/IMG_pcx.o \
+    src/IMG_png.o \
+    src/IMG_pnm.o \
+    src/IMG_qoi.o \
+    src/IMG_stb.o \
+    src/IMG_svg.o \
+    src/IMG_tga.o \
+    src/IMG_tif.o \
+    src/IMG_webp.o \
+    src/IMG_xcf.o \
+    src/IMG_xpm.o \
+    src/IMG_xv.o 
+
+CC = psp-gcc
+CXX = psp-g++
+AR = psp-ar
+RANLIB = psp-ranlib
+
+CFLAGS = -G0 -O2 -Wall -Iinclude -I$(PSPSDK)psp/include/SDL2
+CXXFLAGS = $(CFLAGS) -fno-exceptions -fno-rtti
+LIBDIR = -L$(PSPSDK)/psp/lib
+
+LIBS = -lSDL2 -lpng -ljpeg -lz -lm
+
+# Final static library
+all: lib$(TARGET).a
+
+lib$(TARGET).a: $(OBJS)
+	$(AR) rcs $@ $^
+	$(RANLIB) $@
+
+%.o: %.c
+	$(CC) $(CFLAGS) -c $< -o $@
+
+%.o: %.cpp
+	$(CXX) $(CXXFLAGS) -c $< -o $@
+
+clean:
+	rm -f $(OBJS) lib$(TARGET).a

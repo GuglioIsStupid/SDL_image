@@ -572,6 +572,10 @@ SDL_Surface *IMG_LoadPNG_RW(SDL_RWops *src)
 
 #if SDL_IMAGE_SAVE_PNG
 
+#ifndef SDL_PIXELFORMAT_RGBA32
+#define SDL_PIXELFORMAT_RGBA32 SDL_PIXELFORMAT_ABGR8888
+#endif
+
 static const Uint32 png_format = SDL_PIXELFORMAT_RGBA32;
 
 #ifdef USE_LIBPNG
@@ -804,7 +808,8 @@ int IMG_SavePNG_RW(SDL_Surface *surface, SDL_RWops *dst, int freedst)
     int result = -1;
 
     if (!dst) {
-        return IMG_SetError("Passed NULL dst");
+        IMG_SetError("Passed NULL dst");
+        return -1;
     }
 
 #if SDL_IMAGE_SAVE_PNG

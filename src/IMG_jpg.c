@@ -514,7 +514,8 @@ static int JPEG_SaveJPEG_RW(struct savejpeg_vars *vars, SDL_Surface *jpeg_surfac
         /* If we get here, libjpeg found an error */
         lib.jpeg_destroy_compress(&vars->cinfo);
         SDL_RWseek(dst, vars->original_offset, RW_SEEK_SET);
-        return IMG_SetError("Error saving JPEG with libjpeg");
+        IMG_SetError("Error saving JPEG with libjpeg");
+        return -1;
     }
 
     lib.jpeg_create_compress(&vars->cinfo);
@@ -778,7 +779,8 @@ int IMG_SaveJPG_RW(SDL_Surface *surface, SDL_RWops *dst, int freedst, int qualit
     int result = -1;
 
     if (!dst) {
-        return IMG_SetError("Passed NULL dst");
+        IMG_SetError("Passed NULL dst");
+        return -1;
     }
 
 #if SDL_IMAGE_SAVE_JPG
@@ -790,7 +792,8 @@ int IMG_SaveJPG_RW(SDL_Surface *surface, SDL_RWops *dst, int freedst, int qualit
 
 #if defined(LOAD_JPG_DYNAMIC) || !defined(WANT_JPEGLIB)
     if (result < 0) {
-        result = IMG_SaveJPG_RW_tinyjpeg(surface, dst, quality);
+        IMG_SaveJPG_RW_tinyjpeg(surface, dst, quality);
+        result = 0;
     }
 #endif
 
@@ -803,3 +806,4 @@ int IMG_SaveJPG_RW(SDL_Surface *surface, SDL_RWops *dst, int freedst, int qualit
     }
     return result;
 }
+
